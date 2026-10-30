@@ -1,6 +1,6 @@
 import javax.swing.JFrame;
 
-//by John Breech Villaverde
+// by John Breech Villaverde
 public class LightsOut {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Lights Out! - Maze Game");
