@@ -1,5 +1,3 @@
-package com.mycompany.maze1;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
