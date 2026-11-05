@@ -3,33 +3,36 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 
 class GameHudView {
+    private static final int HEADER_Y = -8;
+    private void centered(Graphics2D g, String text, int centerX, int y) {
+        g.drawString(text, centerX - g.getFontMetrics().stringWidth(text) / 2, y);
+    }
     void drawPreview(Graphics2D g, MazeSession session) {
         g.setColor(new Color(245, 210, 100));
-        g.setFont(new Font("SansSerif", Font.BOLD, 20));
-        g.drawString("MEMORIZE THE MAZE: " + session.previewTime, 85, 20);
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 18));
+        centered(g, "MEMORIZE THE MAZE: " + session.previewTime, MazePanel.WIDTH / 2, HEADER_Y);
     }
 
     void drawStats(Graphics2D g, MazeSession session) {
         g.setColor(Color.WHITE);
-        g.setFont(new Font("SansSerif", Font.BOLD, 15));
-        g.drawString("Level: " + session.level, 20, 18);
-        g.drawString("Score: " + session.score, 340, 18);
-
-        g.setFont(new Font("SansSerif", Font.PLAIN, 11));
-        g.drawString("Best: " + session.highScore, 350, 34);
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 13));
+        centered(g, "Level: " + session.level, 80, HEADER_Y);
+        centered(g, "Score: " + session.score, MazePanel.WIDTH - 80, HEADER_Y);
+        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
+        centered(g, "Best: " + session.highScore, MazePanel.WIDTH - 80, HEADER_Y + 14);
 
         int minutes = session.remainingSeconds / 60;
         int seconds = session.remainingSeconds % 60;
-        g.setFont(new Font("Arial", Font.BOLD, 18));
-        g.drawString(String.format("Time: %02d:%02d", minutes, seconds), 160, 25);
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
+        centered(g, String.format("Time: %02d:%02d", minutes, seconds), MazePanel.WIDTH / 2, HEADER_Y);
     }
 
     void drawInventory(Graphics2D g, MazeSession session) {
-        g.setFont(new Font("SansSerif", Font.BOLD, 12));
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 12));
         g.setColor(new Color(255, 155, 176));
-        g.drawString("Trace: " + session.inventory.traceOrbs, 40, 421);
+        centered(g, "Trace: " + session.inventory.traceOrbs, MazePanel.WIDTH / 4, 421);
         g.setColor(new Color(255, 200, 75));
-        g.drawString("Light: " + session.inventory.lightOrbs + " [E]", 240, 421);
+        centered(g, "Light: " + session.inventory.lightOrbs + " [E]", MazePanel.WIDTH * 3 / 4, 421);
     }
 
     void drawLostScreen(Graphics2D g, MazeSession session) {
@@ -41,24 +44,24 @@ class GameHudView {
         g.setColor(new Color(225, 70, 55));
         g.drawRoundRect(75, 130, 290, 190, 20, 20);
 
-        g.setFont(new Font("Arial", Font.BOLD, 25));
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 23));
         if (session.trapDeath) {
-            g.drawString("CAUGHT BY A TRAP", 100, 180);
+            centered(g, "CAUGHT BY A TRAP", MazePanel.WIDTH / 2, 180);
         } else {
-            g.drawString("TIME'S UP!", 145, 180);
+            centered(g, "TIME'S UP!", MazePanel.WIDTH / 2, 180);
         }
 
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.PLAIN, 18));
-        g.drawString("Score: " + session.score, 170, 225);
-        g.drawString("Best score: " + session.highScore, 145, 255);
+        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
+        centered(g, "Score: " + session.score, MazePanel.WIDTH / 2, 225);
+        centered(g, "Best score: " + session.highScore, MazePanel.WIDTH / 2, 255);
         g.setColor(new Color(245, 210, 100));
-        g.drawString("Press R to restart", 145, 295);
+        centered(g, "Press R to restart", MazePanel.WIDTH / 2, 295);
     }
 
     void drawControls(Graphics2D g) {
         g.setColor(new Color(220, 228, 240));
-        g.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        g.drawString("Move: WASD / Arrows   R: Restart   M: Mute", 85, 450);
+        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
+        centered(g, "Move: WASD / Arrows   R: Restart   M: Mute", MazePanel.WIDTH / 2, 450);
     }
 }

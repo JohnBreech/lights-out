@@ -5,7 +5,9 @@ import java.awt.RenderingHints;
 class ScreenDrawer {
     void drawGame(Graphics graphics, int width, int height, MazeView view,
                   MazeSession session, MazeCharacter character) {
-        Graphics2D scaled = scale(graphics, width, height, MazePanel.WIDTH, MazePanel.HEIGHT);
+        view.drawBackground((Graphics2D) graphics, width, height);
+        Graphics2D scaled = scale(graphics, width, height, MazePanel.WIDTH, MazePanel.HEIGHT + 30);
+        scaled.translate(0, 30);
         try {
             view.draw(scaled, session, character);
         } finally {

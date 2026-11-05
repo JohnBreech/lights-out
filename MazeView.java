@@ -3,6 +3,9 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.util.List;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 
 class MazeView {
     private static int ROWS = MazeBoard.ROWS;
@@ -17,6 +20,25 @@ class MazeView {
     private static Color LIGHT_COLOR = new Color(255, 200, 75);
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
     private GameHudView hud = new GameHudView();
+    private final BufferedImage background = loadBackground();
+
+    private static BufferedImage loadBackground() {
+        try (InputStream stream = ResourceFiles.open("menu/BG (1).png")) {
+            BufferedImage art = ImageIO.read(stream);
+            if (art == null) {
+                throw new IOException("Invalid maze background image");
+            }
+            return art;
+        } catch (IOException error) {
+            throw new IllegalStateException("Could not load maze background", error);
+        }
+    }
+
+    void drawBackground(Graphics2D graphics, int width, int height) {
+        graphics.drawImage(background, 0, 0, width, height, null);
+        graphics.setColor(new Color(15, 20, 35, 130));
+        graphics.fillRect(0, 0, width, height);
+    }
 
     // Draw maze walls
     private void drawMaze(Graphics2D g2, MazeBoard board) {
@@ -70,9 +92,7 @@ class MazeView {
     private void drawGameObjects(Graphics2D g2, MazeSession session, MazeCharacter character) {
 
         // Background
-        g2.setColor(new Color(25, 31, 47));
-        g2.fillRect(0, 0, WIDTH, HEIGHT);
-        g2.setColor(new Color(45, 52, 63));
+        g2.setColor(new Color(25, 31, 47, 180));
         g2.fillRect(OFFSET_X, OFFSET_Y, COLS * CELL_SIZE, ROWS * CELL_SIZE);
 
         // Maze
@@ -191,6 +211,9 @@ class MazeView {
     private void drawInDarkness(Graphics2D g2, MazeSession session, MazeCharacter character) {
         MazePlayer player = session.player;
         Graphics2D mazeGraphics = image.createGraphics();
+        mazeGraphics.setComposite(AlphaComposite.Clear);
+        mazeGraphics.fillRect(0, 0, WIDTH, HEIGHT);
+        mazeGraphics.setComposite(AlphaComposite.SrcOver);
 
         // Draw the maze and objects
         drawGameObjects(mazeGraphics, session, character);
@@ -199,7 +222,7 @@ class MazeView {
 
         // Apply dark overlay
         g2.setColor(Color.BLACK);
-        g2.fillRect(0, 0, WIDTH, HEIGHT);
+        g2.fillRect(OFFSET_X, OFFSET_Y, COLS * CELL_SIZE, ROWS * CELL_SIZE);
 
         // Redraw the visible maze inside the circle
         Shape oldClip = g2.getClip();

@@ -3,6 +3,7 @@ import javax.swing.JFrame;
 // by John Breech Villaverde
 public class LightsOut {
     public static void main(String[] args) {
+
         JFrame frame = new JFrame("Lights Out! - Maze Game");
         MazePanel game = new MazePanel();
 
@@ -14,4 +15,5 @@ public class LightsOut {
         frame.setVisible(true);
         game.requestFocusInWindow();
     }
+    
 }

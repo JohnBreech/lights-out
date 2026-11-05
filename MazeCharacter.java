@@ -6,8 +6,7 @@ import javax.imageio.ImageIO;
 enum MazeCharacter {
     GUY("Guy", "player.png"),
     GIRL("Girl", "girl.png"),
-    KNIGHT("Knight", "knight.png"),
-    DOG("Dog", "dog.png");
+    KNIGHT("Knight", "knight.png");
 
     private final String name;
     private final String file;
