@@ -42,7 +42,7 @@ class MazeMenuView {
             "Memorize, find the exit, and avoid traps!",
             "",
             "Use these powerups to your advantage:",
-            "Light - Lights up the maze for 1.5",
+            "Light - Lights up the maze for 2.5",
             "seconds.",
             "Trace - Reveal the path through the next",
             "maze.",

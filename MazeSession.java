@@ -29,7 +29,7 @@ class MazeSession {
 
     MazeSession(GameAudio audio, Runnable repaint) {
         this.audio = audio;
-        lights = new Timer(1500, event -> repaint.run());
+        lights = new Timer(2500, event -> repaint.run());
         lights.setRepeats(false);
         countdown = new Timer(1000, event -> {
             tick();
