@@ -15,6 +15,7 @@ class MazeMenuView {
     private BufferedImage background = readMenuArt("BG (1).png", false);
     private BufferedImage logo = readMenuArt("LOGO.png", true);
     private BufferedImage characterTitle = readMenuArt("character-options.png", true);
+    private BufferedImage rulesTitle = readMenuArt("rules.png", true);
     private BufferedImage[] menuLabels = {
         readMenuArt("START.png", true),
         readMenuArt("OPTIONS.png", true),
@@ -30,6 +31,36 @@ class MazeMenuView {
         } else {
             drawCharacterMenu(g, characterChoice, muted);
         }
+    }
+
+    void drawRules(Graphics2D g) {
+        g.drawImage(background, 0, 0, MENU_WIDTH, MENU_HEIGHT, null);
+        drawMenuArt(g, rulesTitle, 148, 216, 50);
+        g.setColor(Color.WHITE);
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 18));
+        String[] lines = {
+            "Memorize, find the exit, and avoid traps!",
+            "",
+            "Use these powerups to your advantage:",
+            "Light - Lights up the maze for 1.5",
+            "seconds.",
+            "Trace - Reveal the path through the next",
+            "maze.",
+            "",
+            "Survive endless levels and get the",
+            "highest score!"
+        };
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            g.drawString(line, (MENU_WIDTH - g.getFontMetrics().stringWidth(line)) / 2,
+                    258 + i * 24);
+        }
+        g.setColor(new Color(217, 130, 46));
+        g.fillRoundRect((MENU_WIDTH - 360) / 2, 518, 360, 46, 40, 40);
+        g.setColor(Color.WHITE);
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 22));
+        String prompt = "Press Enter to Confirm";
+        g.drawString(prompt, (MENU_WIDTH - g.getFontMetrics().stringWidth(prompt)) / 2, 548);
     }
 
     private void drawStartMenu(Graphics2D g, int menuChoice,

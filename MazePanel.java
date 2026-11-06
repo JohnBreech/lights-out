@@ -15,6 +15,7 @@ public class MazePanel extends JPanel {
     private enum Screen {
         MENU,
         CHARACTERS,
+        RULES,
         GAME
     }
 
@@ -44,6 +45,13 @@ public class MazePanel extends JPanel {
         if (currentScreen == Screen.GAME) {
             drawGame(graphics, getWidth(), getHeight(),
                     mazeView, session, selectedCharacter);
+        } else if (currentScreen == Screen.RULES) {
+            Graphics2D scaled = scale(graphics, getWidth(), getHeight(), MENU_WIDTH, MENU_HEIGHT);
+            try {
+                menuView.drawRules(scaled);
+            } finally {
+                scaled.dispose();
+            }
         } else {
             boolean choosingCharacter = currentScreen == Screen.CHARACTERS;
             drawMenu(graphics, getWidth(), getHeight(),
@@ -61,6 +69,14 @@ public class MazePanel extends JPanel {
             currentScreen = Screen.MENU;
         } else if (currentScreen == Screen.GAME) {
             handleGameKey(keyCode);
+        } else if (currentScreen == Screen.RULES) {
+            if (keyCode == KeyEvent.VK_ENTER) {
+                audio.cue("confirm");
+                input.clear();
+                currentScreen = Screen.GAME;
+                session.start();
+                requestFocusInWindow();
+            }
         } else {
             handleMenuKey(keyCode);
         }
@@ -126,8 +142,7 @@ public class MazePanel extends JPanel {
         }
 
         if (menuChoice == 0) {
-            currentScreen = Screen.GAME;
-            session.start();
+            currentScreen = Screen.RULES;
         } else if (menuChoice == 1) {
             characterChoice = selectedCharacter.ordinal();
             currentScreen = Screen.CHARACTERS;
