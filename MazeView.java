@@ -16,21 +16,24 @@ class MazeView {
     private static int WIDTH = MazePanel.WIDTH;
     private static int HEIGHT = MazePanel.HEIGHT;
     private static int VIEW_RADIUS = 40;
-    private static Color TRACE_COLOR = new Color(255, 72, 120);
-    private static Color LIGHT_COLOR = new Color(255, 200, 75);
+
+
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
     private GameHudView hud = new GameHudView();
-    private final BufferedImage background = loadBackground();
+    private final BufferedImage background = loadArt("BG (1).png");
+    private final BufferedImage lightArt = loadArt("light (2).png");
+    private final BufferedImage traceArt = loadArt("trace (2).png");
+    private final BufferedImage trapArt = loadArt("trap (2).png");
 
-    private static BufferedImage loadBackground() {
-        try (InputStream stream = ResourceFiles.open("menu/BG (1).png")) {
+    private static BufferedImage loadArt(String file) {
+        try (InputStream stream = ResourceFiles.open("menu/" + file)) {
             BufferedImage art = ImageIO.read(stream);
             if (art == null) {
-                throw new IOException("Invalid maze background image");
+                throw new IOException("Invalid maze image: " + file + "");
             }
             return art;
         } catch (IOException error) {
-            throw new IllegalStateException("Could not load maze background", error);
+            throw new IllegalStateException("Could not load maze image: " + file, error);
         }
     }
 
@@ -104,8 +107,8 @@ class MazeView {
         }
 
         for (PowerUp orb : session.pickups) {
-            Color color = orb.type == PowerUp.TRACE ? TRACE_COLOR : LIGHT_COLOR;
-            drawOrb(g2, orb, color);
+
+            drawOrb(g2, orb);
         }
 
         // Starting point
@@ -115,15 +118,8 @@ class MazeView {
                 session.board.startY() - 7, 14, 14);
 
         Rectangle goal = session.board.goal();
-        // Exit
         g2.setColor(new Color(100, 235, 255));
-
-        g2.fillOval(
-                goal.x,
-                goal.y,
-                goal.width,
-                goal.height
-        );
+        g2.fillOval(goal.x, goal.y, goal.width, goal.height);
 
         MazePlayer player = session.player;
         if (player.facingDirection == 1) {
@@ -136,22 +132,7 @@ class MazeView {
     }
 
     private void drawTrap(Graphics2D g2, Point trap) {
-        g2.setColor(new Color(70, 20, 25));
-        g2.fillOval(trap.x - 8, trap.y + 3, 16, 6);
-
-        g2.setColor(new Color(225, 70, 55));
-        int[] xPoints = {
-            trap.x - 7, trap.x - 4, trap.x - 1,
-            trap.x + 2, trap.x + 5, trap.x + 8
-        };
-        int[] yPoints = {
-            trap.y + 5, trap.y - 6, trap.y + 5,
-            trap.y - 6, trap.y + 5, trap.y + 5
-        };
-        g2.fillPolygon(xPoints, yPoints, 6);
-
-        g2.setColor(new Color(255, 170, 80));
-        g2.drawPolygon(xPoints, yPoints, 6);
+        drawIcon(g2, trapArt, trap.x, trap.y, 18);
     }
 
     private void drawTraps(Graphics2D g2, MazeSession session) {
@@ -173,11 +154,23 @@ class MazeView {
         graphics.draw(path);
     }
 
-    private void drawOrb(Graphics2D graphics, PowerUp orb, Color color) {
-        graphics.setColor(color);
-        graphics.fillOval(orb.x - 5, orb.y - 5, 10, 10);
+    private void drawOrb(Graphics2D graphics, PowerUp orb) {
+        drawIcon(graphics, orb.type == PowerUp.TRACE ? traceArt : lightArt, orb.x, orb.y, 16);
     }
 
+    private void drawIcon(Graphics2D graphics, BufferedImage art, int x, int y, int size) {
+        double scale = Math.min(size / (double) art.getWidth(), size / (double) art.getHeight());
+        int width = Math.max(1, (int) Math.round(art.getWidth() * scale));
+        int height = Math.max(1, (int) Math.round(art.getHeight() * scale));
+        Graphics2D g = (Graphics2D) graphics.create();
+        try {
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+            g.drawImage(art, x - width / 2, y - height / 2, width, height, null);
+        } finally {
+            g.dispose();
+        }
+    }
     void draw(Graphics2D g2, MazeSession session, MazeCharacter character) {
         // Preview mode: Show the entire maze
         if (session.phase == MazeSession.Phase.PREVIEW) {
@@ -242,3 +235,5 @@ class MazeView {
     }
 
 }
+
+
