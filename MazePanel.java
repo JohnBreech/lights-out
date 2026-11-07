@@ -81,10 +81,11 @@ public class MazePanel extends JPanel {
     }
 
     // Handles controls while the player is in a menu.
+    // updated to allow arrow keys.
     private void handleMenuKey(int keyCode) {
-        if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_A) {
+        if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_LEFT) {
             moveMenuSelection(-1);
-        } else if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_D) {
+        } else if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_RIGHT) {
             moveMenuSelection(1);
         } else if (keyCode == KeyEvent.VK_ENTER) {
             selectMenuOption();
