@@ -1,6 +1,7 @@
 import java.awt.Point;
 import java.awt.Rectangle;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -106,12 +107,18 @@ final class MazeBoard {
         startCell = new Point(START_CELLS[level - 1]);
         goalCell = new Point(GOAL_CELLS[level - 1]);
 =======
+=======
+>>>>>>> 70c85ce9ffc0b3123a05fa8a920383d998a60f38
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+<<<<<<< HEAD
 //by Rhian Chua
+=======
+//by Rhian Chua (there was some kind of error so rewritten)
+>>>>>>> 70c85ce9ffc0b3123a05fa8a920383d998a60f38
 class MazeBoard {
     static int ROWS = 15;
     static int COLS = 15;
@@ -140,7 +147,10 @@ class MazeBoard {
         MazeGenerator generator = new MazeGenerator();
         goalCell = generator.createMaze(maze, startCell);
 
+<<<<<<< HEAD
 >>>>>>> edd3ac1f115d60165c1ca9da3d6547f15414f6f1
+=======
+>>>>>>> 70c85ce9ffc0b3123a05fa8a920383d998a60f38
         goal = new Rectangle(cellCenterX(goalCell.x) - 7,
                 cellCenterY(goalCell.y) - 7, 14, 14);
     }
@@ -154,12 +164,15 @@ class MazeBoard {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     Point cellCenter(Point cell) {
         return new Point(cellCenterX(cell.x), cellCenterY(cell.y));
     }
 
 =======
 >>>>>>> edd3ac1f115d60165c1ca9da3d6547f15414f6f1
+=======
+>>>>>>> 70c85ce9ffc0b3123a05fa8a920383d998a60f38
     private static int cellCenterX(int col) {
         return OFFSET_X + col * CELL_SIZE + CELL_SIZE / 2;
     }
@@ -192,6 +205,7 @@ class MazeBoard {
         return maze[row][col].right;
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     List<Point> routeToExit() {
         Point[][] parents = new Point[ROWS][COLS];
@@ -240,6 +254,8 @@ class MazeBoard {
     }
 
 =======
+=======
+>>>>>>> 70c85ce9ffc0b3123a05fa8a920383d998a60f38
     // Builds the safe path from the starting point to the exit.
     List<Point> routeToExit() {
         return pathFinder.findRoute(maze, startCell, goalCell);
@@ -288,7 +304,10 @@ class MazeBoard {
     }
 
     // Returns false when the player would touch a wall.
+<<<<<<< HEAD
 >>>>>>> edd3ac1f115d60165c1ca9da3d6547f15414f6f1
+=======
+>>>>>>> 70c85ce9ffc0b3123a05fa8a920383d998a60f38
     boolean canOccupy(Rectangle next) {
         if (next.x < OFFSET_X
                 || next.y < OFFSET_Y
@@ -302,10 +321,14 @@ class MazeBoard {
                 int x = OFFSET_X + col * CELL_SIZE;
                 int y = OFFSET_Y + row * CELL_SIZE;
 <<<<<<< HEAD
+<<<<<<< HEAD
                 Cell cell = maze[row][col];
 =======
                 MazeCell cell = maze[row][col];
 >>>>>>> edd3ac1f115d60165c1ca9da3d6547f15414f6f1
+=======
+                MazeCell cell = maze[row][col];
+>>>>>>> 70c85ce9ffc0b3123a05fa8a920383d998a60f38
                 if ((cell.top && next.intersects(x, y, CELL_SIZE, WALL_THICKNESS))
                         || (cell.bottom && next.intersects(
                                 x, y + CELL_SIZE - WALL_THICKNESS, CELL_SIZE, WALL_THICKNESS))
