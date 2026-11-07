@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 
@@ -23,6 +22,7 @@ public class MazePanel extends JPanel {
     private MazeSession session = new MazeSession(audio, this::repaint);
     private MazeView mazeView = new MazeView();
     private MazeMenuView menuView = new MazeMenuView();
+    private GameHudView hud = new GameHudView();
 
     private GameInput input;
 
@@ -41,22 +41,24 @@ public class MazePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+        Graphics2D drawing = (Graphics2D) graphics;
 
         if (currentScreen == Screen.GAME) {
-            drawGame(graphics, getWidth(), getHeight(),
-                    mazeView, session, selectedCharacter);
-        } else if (currentScreen == Screen.RULES) {
-            Graphics2D scaled = scale(graphics, getWidth(), getHeight(), MENU_WIDTH, MENU_HEIGHT);
-            try {
-                menuView.drawRules(scaled);
-            } finally {
-                scaled.dispose();
+            if (session.phase == MazeSession.Phase.LOST) {
+                hud.drawLostScreen(drawing, getWidth(), getHeight(), session);
+            } else {
+                mazeView.drawBackground(drawing, getWidth(), getHeight());
+                int x = (getWidth() - WIDTH) / 2;
+                int y = (getHeight() - HEIGHT) / 2;
+                drawing.translate(x, y);
+                mazeView.draw(drawing, session, selectedCharacter);
             }
+        } else if (currentScreen == Screen.RULES) {
+            menuView.drawRules(drawing);
         } else {
             boolean choosingCharacter = currentScreen == Screen.CHARACTERS;
-            drawMenu(graphics, getWidth(), getHeight(),
-                    menuView, menuChoice, characterChoice, selectedCharacter,
-                    audio.isMuted(), choosingCharacter);
+            menuView.draw(drawing, choosingCharacter, menuChoice,
+                    characterChoice, selectedCharacter, audio.isMuted());
         }
     }
 
@@ -153,46 +155,6 @@ public class MazePanel extends JPanel {
 
     private void closeWindow() {
         System.exit(0);
-    }
-
-    private final GameHudView hud = new GameHudView();
-    private void drawGame(Graphics graphics, int width, int height, MazeView view,
-                  MazeSession session, MazeCharacter character) {
-        if (session.phase == MazeSession.Phase.LOST) {
-            hud.drawLostScreen((Graphics2D) graphics, width, height, session);
-            return;
-        }
-        view.drawBackground((Graphics2D) graphics, width, height);
-        Graphics2D scaled = scale(graphics, width, height, MazePanel.WIDTH, MazePanel.HEIGHT + 30);
-        scaled.translate(0, 30);
-        try {
-            view.draw(scaled, session, character);
-        } finally {
-            scaled.dispose();
-        }
-    }
-
-    private void drawMenu(Graphics graphics, int width, int height, MazeMenuView view,
-                  int menuChoice, int characterChoice, MazeCharacter character,
-                  boolean muted, boolean choosingCharacter) {
-        Graphics2D scaled = scale(graphics, width, height,
-                MazePanel.MENU_WIDTH, MazePanel.MENU_HEIGHT);
-        try {
-            view.draw(scaled, choosingCharacter, menuChoice, characterChoice, character, muted);
-        } finally {
-            scaled.dispose();
-        }
-    }
-
-    private Graphics2D scale(Graphics graphics, int width, int height,
-                             int logicalWidth, int logicalHeight) {
-        Graphics2D result = (Graphics2D) graphics.create();
-        double factor = Math.min(width / (double) logicalWidth, height / (double) logicalHeight);
-        result.translate((width - logicalWidth * factor) / 2,
-                (height - logicalHeight * factor) / 2);
-        result.scale(factor, factor);
-        result.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        return result;
     }
 
 }
